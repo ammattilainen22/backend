@@ -13,8 +13,8 @@ mongoose.connect(url)
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
   })
-
-const diarySchema = new mongoose.Schema({
+user
+const userSchema = new mongoose.Schema({
   content: {
     type: String,
     minlength: 5,
@@ -24,9 +24,9 @@ const diarySchema = new mongoose.Schema({
   important: Boolean,
 })
 
-const Diary = mongoose.model('Diary', diarySchema)
+const user = mongoose.model('user', userSchema)
 
-diarySchema.set('toJSON', {
+userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
@@ -34,4 +34,4 @@ diarySchema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.model('Diary', diarySchema)
+module.exports = mongoose.model('user', userSchema)
