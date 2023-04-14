@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const user = require('./models/user')
+const Diary = require('./models/diary')
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
@@ -26,14 +26,14 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/api/user', (request, response) => {
-  user.find({}).then(entries => {
+app.get('/api/diary', (request, response) => {
+  Diary.find({}).then(entries => {
     response.json(entries)
   })
 })
 
-app.get('/api/user/:id', (request, response, next) => {
-  user.findById(request.params.id)
+app.get('/api/diary/:id', (request, response, next) => {
+  Diary.findById(request.params.id)
     .then(entry => {
       if (entry) {
         response.json(entry)
@@ -44,10 +44,10 @@ app.get('/api/user/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.put('/api/user/:id', (request, response, next) => {
+app.put('/api/diary/:id', (request, response, next) => {
   const { content, important } = request.body
 
-  user.findByIdAndUpdate(request.params.id,
+  Diary.findByIdAndUpdate(request.params.id,
     { content, important },
     { new: true, runValidators: true, context: 'query' }
   )
@@ -57,18 +57,18 @@ app.put('/api/user/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.delete('/api/user/:id', (request, response, next) => {
-  user.findByIdAndRemove(request.params.id)
+app.delete('/api/diary/:id', (request, response, next) => {
+  Diary.findByIdAndRemove(request.params.id)
     .then(result => {
       response.status(204).end()
     })
     .catch(error => next(error))
 })
 
-app.post('/api/user', (request, response, next) => {
+app.post('/api/diary', (request, response, next) => {
   const body = request.body
 
-  const entry = new user({
+  const entry = new Diary({
     content: body.content,
     important: body.important || false,
     date: new Date()
